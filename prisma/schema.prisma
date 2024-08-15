@@ -18,41 +18,9 @@ model User {
   image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  notes     Note[]
 }
 
 enum Role {
-  FREE_TRIAL_USER
   USER
   SUPERUSER
-}
-
-model Note {
-  id              String           @id @default(uuid())
-  title           String
-  content         String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  userId          String
-  user            User             @relation(fields: [userId], references: [id])
-  insights        Insight[]
-  noteConnections NoteConnection[]
-}
-
-model Insight {
-  id        String   @id @default(uuid())
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  noteId    String
-  note      Note     @relation(fields: [noteId], references: [id])
-}
-
-model NoteConnection {
-  id              String   @id @default(uuid())
-  noteId          String
-  note            Note     @relation(fields: [noteId], references: [id])
-  connectedNoteId String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
 }

@@ -2,7 +2,6 @@ export const typeDefs = `#graphql
   enum Role {
     USER
     SUPERUSER
-    FREE_TRIAL_USER
   }
 
 type Message {
@@ -18,35 +17,7 @@ type User {
   image: String
   createdAt: String!
   updatedAt: String!
-  notes: [Note]
 }
-
-type Note {
-  id: ID!
-  title: String!
-  content: String!
-  createdAt: String!
-  updatedAt: String!
-  user: User!
-  insights: [Insight]
-  noteConnections: [NoteConnection]
-}
-
-  type Insight {
-    id: ID!
-    content: String!
-    createdAt: String!
-    updatedAt: String!
-    note: Note!
-  }
-
-  type NoteConnection {
-    id: ID!
-    note: Note!
-    connectedNoteId: String!
-    createdAt: String!
-    updatedAt: String!
-  }
 
   type Query {
     users: [User!]!

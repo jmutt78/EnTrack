@@ -74,7 +74,7 @@ export const UserResolvers = {
           data: {
             id: firebaseUser.uid,
             email,
-            role: Role.FREE_TRIAL_USER,
+            role: Role.USER,
           },
           include: { notes: true },
         });
@@ -172,7 +172,7 @@ export const UserResolvers = {
           data: {
             id: firebaseUser.uid,
             email: firebaseUser?.email || '',
-            role: Role.FREE_TRIAL_USER,
+            role: Role.USER,
           },
           include: { notes: true },
         });

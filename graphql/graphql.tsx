@@ -7,18 +7,22 @@ export type InputMaybe<T> = undefined | T;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never;
+};
+export type Incremental<T> =
+  | T
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string | number; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
+  ID: { input: string | number; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
 };
 
 export type Insight = {
@@ -45,7 +49,6 @@ export type Mutation = {
   userSignIn?: Maybe<User>;
 };
 
-
 export type MutationCreateUserArgs = {
   email: Scalars['String']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
@@ -54,21 +57,17 @@ export type MutationCreateUserArgs = {
   role?: InputMaybe<Role>;
 };
 
-
 export type MutationDeleteUserArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type MutationPasswordResetArgs = {
   email: Scalars['String']['input'];
 };
 
-
 export type MutationSignInWithGoogleArgs = {
   token: Scalars['String']['input'];
 };
-
 
 export type MutationUserSignInArgs = {
   email: Scalars['String']['input'];
@@ -103,15 +102,13 @@ export type Query = {
   users: Array<User>;
 };
 
-
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
 };
 
 export enum Role {
-  FreeTrialUser = 'FREE_TRIAL_USER',
   Superuser = 'SUPERUSER',
-  User = 'USER'
+  User = 'USER',
 }
 
 export type User = {
@@ -132,45 +129,65 @@ export type CreateUserMutationVariables = Exact<{
   password: Scalars['String']['input'];
 }>;
 
-
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string } };
+export type CreateUserMutation = {
+  __typename?: 'Mutation';
+  createUser: { __typename?: 'User'; id: string };
+};
 
 export type SignInWithGoogleMutationVariables = Exact<{
   token: Scalars['String']['input'];
 }>;
 
-
-export type SignInWithGoogleMutation = { __typename?: 'Mutation', signInWithGoogle?: { __typename?: 'User', id: string, email: string } | null };
+export type SignInWithGoogleMutation = {
+  __typename?: 'Mutation';
+  signInWithGoogle?: { __typename?: 'User'; id: string; email: string } | null;
+};
 
 export type UserSignInMutationVariables = Exact<{
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
 }>;
 
-
-export type UserSignInMutation = { __typename?: 'Mutation', userSignIn?: { __typename?: 'User', id: string, email: string } | null };
+export type UserSignInMutation = {
+  __typename?: 'Mutation';
+  userSignIn?: { __typename?: 'User'; id: string; email: string } | null;
+};
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
+export type GetUserQuery = {
+  __typename?: 'Query';
+  user?: { __typename?: 'User'; id: string; name?: string | null } | null;
+};
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name?: string | null } | null };
+export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name?: string | null, email: string, role: Role, createdAt: string, updatedAt: string } | null };
-
+export type MeQuery = {
+  __typename?: 'Query';
+  me?: {
+    __typename?: 'User';
+    id: string;
+    name?: string | null;
+    email: string;
+    role: Role;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
 
 export const CreateUserDocument = gql`
-    mutation createUser($email: String!, $password: String!) {
-  createUser(email: $email, password: $password) {
-    id
+  mutation createUser($email: String!, $password: String!) {
+    createUser(email: $email, password: $password) {
+      id
+    }
   }
-}
-    `;
-export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
+`;
+export type CreateUserMutationFn = Apollo.MutationFunction<
+  CreateUserMutation,
+  CreateUserMutationVariables
+>;
 
 /**
  * __useCreateUserMutation__
@@ -190,22 +207,33 @@ export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, C
  *   },
  * });
  */
-export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
-      }
+export function useCreateUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(
+    CreateUserDocument,
+    options
+  );
+}
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
-export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<
+  CreateUserMutation,
+  CreateUserMutationVariables
+>;
 export const SignInWithGoogleDocument = gql`
-    mutation SignInWithGoogle($token: String!) {
-  signInWithGoogle(token: $token) {
-    id
-    email
+  mutation SignInWithGoogle($token: String!) {
+    signInWithGoogle(token: $token) {
+      id
+      email
+    }
   }
-}
-    `;
-export type SignInWithGoogleMutationFn = Apollo.MutationFunction<SignInWithGoogleMutation, SignInWithGoogleMutationVariables>;
+`;
+export type SignInWithGoogleMutationFn = Apollo.MutationFunction<
+  SignInWithGoogleMutation,
+  SignInWithGoogleMutationVariables
+>;
 
 /**
  * __useSignInWithGoogleMutation__
@@ -224,22 +252,36 @@ export type SignInWithGoogleMutationFn = Apollo.MutationFunction<SignInWithGoogl
  *   },
  * });
  */
-export function useSignInWithGoogleMutation(baseOptions?: Apollo.MutationHookOptions<SignInWithGoogleMutation, SignInWithGoogleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SignInWithGoogleMutation, SignInWithGoogleMutationVariables>(SignInWithGoogleDocument, options);
-      }
+export function useSignInWithGoogleMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SignInWithGoogleMutation,
+    SignInWithGoogleMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SignInWithGoogleMutation, SignInWithGoogleMutationVariables>(
+    SignInWithGoogleDocument,
+    options
+  );
+}
 export type SignInWithGoogleMutationHookResult = ReturnType<typeof useSignInWithGoogleMutation>;
 export type SignInWithGoogleMutationResult = Apollo.MutationResult<SignInWithGoogleMutation>;
-export type SignInWithGoogleMutationOptions = Apollo.BaseMutationOptions<SignInWithGoogleMutation, SignInWithGoogleMutationVariables>;
+export type SignInWithGoogleMutationOptions = Apollo.BaseMutationOptions<
+  SignInWithGoogleMutation,
+  SignInWithGoogleMutationVariables
+>;
 export const UserSignInDocument = gql`
-    mutation UserSignIn($email: String!, $password: String!) {
-  userSignIn(email: $email, password: $password) {
-    id
-    email
+  mutation UserSignIn($email: String!, $password: String!) {
+    userSignIn(email: $email, password: $password) {
+      id
+      email
+    }
   }
-}
-    `;
-export type UserSignInMutationFn = Apollo.MutationFunction<UserSignInMutation, UserSignInMutationVariables>;
+`;
+export type UserSignInMutationFn = Apollo.MutationFunction<
+  UserSignInMutation,
+  UserSignInMutationVariables
+>;
 
 /**
  * __useUserSignInMutation__
@@ -259,21 +301,29 @@ export type UserSignInMutationFn = Apollo.MutationFunction<UserSignInMutation, U
  *   },
  * });
  */
-export function useUserSignInMutation(baseOptions?: Apollo.MutationHookOptions<UserSignInMutation, UserSignInMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UserSignInMutation, UserSignInMutationVariables>(UserSignInDocument, options);
-      }
+export function useUserSignInMutation(
+  baseOptions?: Apollo.MutationHookOptions<UserSignInMutation, UserSignInMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UserSignInMutation, UserSignInMutationVariables>(
+    UserSignInDocument,
+    options
+  );
+}
 export type UserSignInMutationHookResult = ReturnType<typeof useUserSignInMutation>;
 export type UserSignInMutationResult = Apollo.MutationResult<UserSignInMutation>;
-export type UserSignInMutationOptions = Apollo.BaseMutationOptions<UserSignInMutation, UserSignInMutationVariables>;
+export type UserSignInMutationOptions = Apollo.BaseMutationOptions<
+  UserSignInMutation,
+  UserSignInMutationVariables
+>;
 export const GetUserDocument = gql`
-    query getUser($id: ID!) {
-  user(id: $id) {
-    id
-    name
+  query getUser($id: ID!) {
+    user(id: $id) {
+      id
+      name
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useGetUserQuery__
@@ -291,29 +341,33 @@ export const GetUserDocument = gql`
  *   },
  * });
  */
-export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
-      }
-export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
-        }
+export function useGetUserQuery(
+  baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+}
+export function useGetUserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+}
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
 export const MeDocument = gql`
-    query me {
-  me {
-    id
-    name
-    email
-    role
-    createdAt
-    updatedAt
+  query me {
+    me {
+      id
+      name
+      email
+      role
+      createdAt
+      updatedAt
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useMeQuery__
@@ -331,25 +385,27 @@ export const MeDocument = gql`
  * });
  */
 export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-      }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+}
+export function useMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+}
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 
-
 export type ResolverTypeWrapper<T> = Promise<T> | T;
-
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+  | ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -372,7 +428,13 @@ export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+export interface SubscriptionSubscriberObject<
+  TResult,
+  TKey extends string,
+  TParent,
+  TContext,
+  TArgs
+> {
   subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
   resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
 }
@@ -386,7 +448,13 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+export type SubscriptionResolver<
+  TResult,
+  TKey extends string,
+  TParent = {},
+  TContext = {},
+  TArgs = {}
+> =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
@@ -396,7 +464,11 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+  obj: T,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -408,8 +480,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-
-
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -417,8 +487,16 @@ export type ResolversTypes = {
   Insight: ResolverTypeWrapper<Omit<Insight, 'note'> & { note: ResolversTypes['Note'] }>;
   Message: ResolverTypeWrapper<Message>;
   Mutation: ResolverTypeWrapper<{}>;
-  Note: ResolverTypeWrapper<Omit<Note, 'insights' | 'noteConnections' | 'user'> & { insights?: Maybe<Array<Maybe<ResolversTypes['Insight']>>>, noteConnections?: Maybe<Array<Maybe<ResolversTypes['NoteConnection']>>>, user: ResolversTypes['User'] }>;
-  NoteConnection: ResolverTypeWrapper<Omit<NoteConnection, 'note'> & { note: ResolversTypes['Note'] }>;
+  Note: ResolverTypeWrapper<
+    Omit<Note, 'insights' | 'noteConnections' | 'user'> & {
+      insights?: Maybe<Array<Maybe<ResolversTypes['Insight']>>>;
+      noteConnections?: Maybe<Array<Maybe<ResolversTypes['NoteConnection']>>>;
+      user: ResolversTypes['User'];
+    }
+  >;
+  NoteConnection: ResolverTypeWrapper<
+    Omit<NoteConnection, 'note'> & { note: ResolversTypes['Note'] }
+  >;
   Query: ResolverTypeWrapper<{}>;
   Role: Role;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -432,14 +510,21 @@ export type ResolversParentTypes = {
   Insight: Omit<Insight, 'note'> & { note: ResolversParentTypes['Note'] };
   Message: Message;
   Mutation: {};
-  Note: Omit<Note, 'insights' | 'noteConnections' | 'user'> & { insights?: Maybe<Array<Maybe<ResolversParentTypes['Insight']>>>, noteConnections?: Maybe<Array<Maybe<ResolversParentTypes['NoteConnection']>>>, user: ResolversParentTypes['User'] };
+  Note: Omit<Note, 'insights' | 'noteConnections' | 'user'> & {
+    insights?: Maybe<Array<Maybe<ResolversParentTypes['Insight']>>>;
+    noteConnections?: Maybe<Array<Maybe<ResolversParentTypes['NoteConnection']>>>;
+    user: ResolversParentTypes['User'];
+  };
   NoteConnection: Omit<NoteConnection, 'note'> & { note: ResolversParentTypes['Note'] };
   Query: {};
   String: Scalars['String']['output'];
   User: UserModel;
 };
 
-export type InsightResolvers<ContextType = any, ParentType extends ResolversParentTypes['Insight'] = ResolversParentTypes['Insight']> = {
+export type InsightResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Insight'] = ResolversParentTypes['Insight']
+> = {
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -448,33 +533,74 @@ export type InsightResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
+export type MessageResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']
+> = {
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email'>>;
-  deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
-  passwordReset?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationPasswordResetArgs, 'email'>>;
-  signInWithGoogle?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationSignInWithGoogleArgs, 'token'>>;
+export type MutationResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
+> = {
+  createUser?: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateUserArgs, 'email'>
+  >;
+  deleteUser?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeleteUserArgs, 'id'>
+  >;
+  passwordReset?: Resolver<
+    ResolversTypes['Message'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPasswordResetArgs, 'email'>
+  >;
+  signInWithGoogle?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationSignInWithGoogleArgs, 'token'>
+  >;
   signOut?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  userSignIn?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUserSignInArgs, 'email' | 'password'>>;
+  userSignIn?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUserSignInArgs, 'email' | 'password'>
+  >;
 };
 
-export type NoteResolvers<ContextType = any, ParentType extends ResolversParentTypes['Note'] = ResolversParentTypes['Note']> = {
+export type NoteResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Note'] = ResolversParentTypes['Note']
+> = {
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   insights?: Resolver<Maybe<Array<Maybe<ResolversTypes['Insight']>>>, ParentType, ContextType>;
-  noteConnections?: Resolver<Maybe<Array<Maybe<ResolversTypes['NoteConnection']>>>, ParentType, ContextType>;
+  noteConnections?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['NoteConnection']>>>,
+    ParentType,
+    ContextType
+  >;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type NoteConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['NoteConnection'] = ResolversParentTypes['NoteConnection']> = {
+export type NoteConnectionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['NoteConnection'] = ResolversParentTypes['NoteConnection']
+> = {
   connectedNoteId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -483,13 +609,24 @@ export type NoteConnectionResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type QueryResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
+> = {
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
+  user?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserArgs, 'id'>
+  >;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 };
 
-export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+export type UserResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
+> = {
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -511,4 +648,3 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
-
